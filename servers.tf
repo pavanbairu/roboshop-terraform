@@ -1,5 +1,18 @@
 variable "components" {
-  default = ["frontend", "mongodb", "catalogue"]
+  default = {
+    frontend = {
+      name = "frontend"
+      instance_type = "t3.micro"
+    }
+    mongodb = {
+      name = "frontend"
+      instance_type = "t3.micro"
+    }
+    catalogue  = {
+      name = "frontend"
+      instance_type = "t3.micro"
+    }
+  }
 }
 
 data "aws_ami" "centos" {
@@ -12,18 +25,18 @@ data "aws_security_group" "allow-all" {
   name = "allow-all"
 }
 
-variable "instance_type" {
-  default = "t3.micro"
-}
+#variable "instance_type" {
+#  default = "t3.micro"
+#}
 
 resource "aws_instance" "all_instance" {
-  count = length(var.components)
+  for_each = var.components
   ami = data.aws_ami.centos.image_id
-  instance_type = var.instance_type
+  instance_type = each.value["name"]
   vpc_security_group_ids = [data.aws_security_group.allow-all.id]
 
   tags = {
-    Name = var.components[count.index]
+    Name = each.value["name"]
   }
 }
 
