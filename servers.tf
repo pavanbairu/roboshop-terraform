@@ -5,11 +5,11 @@ variable "components" {
       instance_type = "t3.micro"
     }
     mongodb = {
-      name = "frontend"
+      name = "mongodb"
       instance_type = "t3.micro"
     }
     catalogue  = {
-      name = "frontend"
+      name = "catalogue"
       instance_type = "t3.micro"
     }
   }
