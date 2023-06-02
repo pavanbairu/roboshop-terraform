@@ -30,5 +30,3 @@ module "web" {
   allow_app_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_app_cidr"], null), "subnet_cidrs", null)
 
 }
-
-
