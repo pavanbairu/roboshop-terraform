@@ -14,11 +14,11 @@ module "web" {
   for_each      = var.app
   instance_type = each.value["instance_type"]
   name          = each.value["name"]
-  desired_capacity          = each.value["desired_capacity"]
+  desired_capacity  = each.value["desired_capacity"]
   max_size          = each.value["max_size"]
   min_size          = each.value["min_size"]
 
-  env           = each.value["env"]
+  env           = var.env
   bastion_cidr  = var.bastion_cidr
   tags          = local.tags
 
