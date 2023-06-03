@@ -55,7 +55,7 @@ module "vpc" {
 module "rds" {
   source = "git::https://github.com/pavanbairu/tf-module-rds.git"
 
-  for_each      = var.docdb
+  for_each      = var.rds
   subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
   vpc_id        = local.vpc_id
   tags          = local.tags
@@ -81,7 +81,7 @@ module "rds" {
 #  num_node_groups = each.value["num_node_groups"]
 #  node_type = each.value["node_type"]
 #}
-#
+
 #module "rabbitmq" {
 #  source = "git::https://github.com/pavanbairu/tf-module-amazon-mq.git"
 #
