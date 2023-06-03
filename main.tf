@@ -51,36 +51,36 @@ module "vpc" {
 #  instance_count = each.value["instance_count"]
 #  instance_class = each.value["instance_class"]
 #}
-
-module "rds" {
-  source = "git::https://github.com/pavanbairu/tf-module-rds.git"
-
-  for_each      = var.rds
-  subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
-  vpc_id        = local.vpc_id
-  tags          = local.tags
-  env           = var.env
-  allow_db_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
-  kms_arn       = var.kms_arn
-  engine_version = each.value["engine_version"]
-  instance_count = each.value["instance_count"]
-  instance_class = each.value["instance_class"]
-}
-
-#module "elasticcache" {
-#  source = "git::https://github.com/pavanbairu/tf-module-elastic-cache.git"
 #
-#  for_each      = var.docdb
+#module "rds" {
+#  source = "git::https://github.com/pavanbairu/tf-module-rds.git"
+#
+#  for_each      = var.rds
 #  subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
 #  vpc_id        = local.vpc_id
 #  tags          = local.tags
 #  env           = var.env
 #  allow_db_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
 #  kms_arn       = var.kms_arn
-#  replicas_per_node_group = each.value["replicas_per_node_group"]
-#  num_node_groups = each.value["num_node_groups"]
-#  node_type = each.value["node_type"]
+#  engine_version = each.value["engine_version"]
+#  instance_count = each.value["instance_count"]
+#  instance_class = each.value["instance_class"]
 #}
+
+module "elasticcache" {
+  source = "git::https://github.com/pavanbairu/tf-module-elastic-cache.git"
+
+  for_each      = var.elasticache
+  subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
+  vpc_id        = local.vpc_id
+  tags          = local.tags
+  env           = var.env
+  allow_db_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
+  kms_arn       = var.kms_arn
+  replicas_per_node_group = each.value["replicas_per_node_group"]
+  num_node_groups = each.value["num_node_groups"]
+  node_type = each.value["node_type"]
+}
 
 #module "rabbitmq" {
 #  source = "git::https://github.com/pavanbairu/tf-module-amazon-mq.git"
