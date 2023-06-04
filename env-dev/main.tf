@@ -4,6 +4,8 @@ default_vpc_id   = "vpc-0a1bf336cf22dd9ab"
 default_vpc_cidr = "172.31.0.0/16"
 default_vpc_rtid = "rtb-097d2c148c9b47828"
 kms_arn          = "arn:aws:kms:us-east-1:416622536569:key/1dfa7b43-08ea-4a7f-b85d-4827823ac62e"
+domain_name      = "pavanbairu.tech"
+domain_id        = "Z08846229MEF59DJAKAS"
 
 vpc = {
   main = {
@@ -44,6 +46,9 @@ app = {
     max_size         = 10
     min_size         = 1
     app_port         = 80
+    listener_priority = 1
+    lb_type           = "public"
+    dns_name = "dev"
   }
   catalogue = {
     name             = "catalogue"
@@ -54,6 +59,8 @@ app = {
     max_size         = 10
     min_size         = 1
     app_port         = 8080
+    listener_priority = 1
+    lb_type           = "private"
   }
   #  cart = {
   #    name          = "cart"
