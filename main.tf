@@ -14,13 +14,13 @@ module "vpc" {
 module "docdb" {
   source = "git::https://github.com/pavanbairu/tf-module-docdb.git"
 
-  for_each      = var.docdb
-  subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
-  vpc_id        = local.vpc_id
-  tags          = local.tags
-  env           = var.env
-  allow_db_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
-  kms_arn       = var.kms_arn
+  for_each       = var.docdb
+  subnets        = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
+  vpc_id         = local.vpc_id
+  tags           = local.tags
+  env            = var.env
+  allow_db_cidr  = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
+  kms_arn        = var.kms_arn
   engine_version = each.value["engine_version"]
   instance_count = each.value["instance_count"]
   instance_class = each.value["instance_class"]
@@ -29,13 +29,13 @@ module "docdb" {
 module "rds" {
   source = "git::https://github.com/pavanbairu/tf-module-rds.git"
 
-  for_each      = var.rds
-  subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
-  vpc_id        = local.vpc_id
-  tags          = local.tags
-  env           = var.env
-  allow_db_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
-  kms_arn       = var.kms_arn
+  for_each       = var.rds
+  subnets        = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
+  vpc_id         = local.vpc_id
+  tags           = local.tags
+  env            = var.env
+  allow_db_cidr  = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
+  kms_arn        = var.kms_arn
   engine_version = each.value["engine_version"]
   instance_count = each.value["instance_count"]
   instance_class = each.value["instance_class"]
@@ -44,17 +44,17 @@ module "rds" {
 module "elasticache" {
   source = "git::https://github.com/pavanbairu/tf-module-elastic-cache.git"
 
-  for_each      = var.elasticache
-  subnets       = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
-  vpc_id        = local.vpc_id
-  tags          = local.tags
-  env           = var.env
-  allow_db_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
-  kms_arn       = var.kms_arn
-  engine_version = each.value["engine_version"]
+  for_each                = var.elasticache
+  subnets                 = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
+  vpc_id                  = local.vpc_id
+  tags                    = local.tags
+  env                     = var.env
+  allow_db_cidr           = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_db_cidr"], null), "subnet_cidrs", null)
+  kms_arn                 = var.kms_arn
+  engine_version          = each.value["engine_version"]
   replicas_per_node_group = each.value["replicas_per_node_group"]
-  num_node_groups = each.value["num_node_groups"]
-  node_type = each.value["node_type"]
+  num_node_groups         = each.value["num_node_groups"]
+  node_type               = each.value["node_type"]
 }
 
 module "rabbitmq" {
@@ -91,11 +91,11 @@ module "alb" {
 
 module "app" {
   depends_on = [module.vpc, module.docdb, module.rds, module.elasticache, module.rabbitmq, module.alb]
-  source = "git::https://github.com/pavanbairu/tf-module-app.git"
+  source     = "git::https://github.com/pavanbairu/tf-module-app.git"
 
-  for_each      = var.app
-  instance_type = each.value["instance_type"]
-  name          = each.value["name"]
+  for_each          = var.app
+  instance_type     = each.value["instance_type"]
+  name              = each.value["name"]
   desired_capacity  = each.value["desired_capacity"]
   max_size          = each.value["max_size"]
   min_size          = each.value["min_size"]
@@ -104,15 +104,15 @@ module "app" {
   dns_name          = each.value["name"] == "frontend" ? each.value["dns_name"] : "${each.value["name"]}-${var.env}"
   parameters        = each.value["parameters"]
 
-  env           = var.env
-  bastion_cidr  = var.bastion_cidr
-  tags          = local.tags
-  domain_id     = var.domain_id
-  domain_name   = var.domain_name
-  kms_arn       = var.kms_arn
+  env          = var.env
+  bastion_cidr = var.bastion_cidr
+  tags         = local.tags
+  domain_id    = var.domain_id
+  domain_name  = var.domain_name
+  kms_arn      = var.kms_arn
 
   subnet_ids     = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
-  vpc_id        = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
+  vpc_id         = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
   allow_app_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_app_cidr"], null), "subnet_cidrs", null)
   listener_arn   = lookup(lookup(module.alb, each.value["lb_type"], null), "listener_arn", null)
   lb_dns_name    = lookup(lookup(module.alb, each.value["lb_type"], null), "dns_name", null)
