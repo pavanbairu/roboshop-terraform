@@ -89,7 +89,7 @@ module "alb" {
 }
 
 
-module "web" {
+module "app" {
   depends_on = [module.vpc, module.docdb, module.rds, module.elasticache, module.rabbitmq, module.alb]
   source = "git::https://github.com/pavanbairu/tf-module-app.git"
 
