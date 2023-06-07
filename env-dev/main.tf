@@ -64,19 +64,6 @@ app = {
     lb_type           = "private"
     parameters        = ["docdb"]
   }
-  cart = {
-    name              = "cart"
-    instance_type     = "t3.small"
-    subnet_name       = "app"
-    allow_app_cidr    = "app"
-    desired_capacity  = 1
-    max_size          = 10
-    min_size          = 1
-    app_port          = 8080
-    listener_priority = 2
-    lb_type           = "private"
-    parameters        = []
-  }
   user = {
     name              = "user"
     instance_type     = "t3.small"
@@ -86,10 +73,24 @@ app = {
     max_size          = 10
     min_size          = 1
     app_port          = 8080
-    listener_priority = 3
+    listener_priority = 2
     lb_type           = "private"
     parameters        = ["docdb"]
   }
+  cart = {
+    name              = "cart"
+    instance_type     = "t3.small"
+    subnet_name       = "app"
+    allow_app_cidr    = "app"
+    desired_capacity  = 1
+    max_size          = 10
+    min_size          = 1
+    app_port          = 8080
+    listener_priority = 3
+    lb_type           = "private"
+    parameters        = []
+  }
+
   shipping = {
     name              = "shipping"
     instance_type     = "t3.small"
